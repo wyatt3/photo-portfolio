@@ -1,0 +1,34 @@
+// vscode container configuration
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.158.0/containers/docker-existing-dockerfile
+{
+    "name": "photos",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "php",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash",
+            },
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "bmewburn.vscode-intelephense-client",
+                "eamodio.gitlens",
+                "xdebug.php-debug",
+                "neilbrayfield.php-docblocker",
+                "streetsidesoftware.code-spell-checker",
+                "octref.vetur",
+                "editorconfig.editorconfig",
+                "RichardKotze.git-mob",
+                "formulahendry.auto-close-tag",
+                "formulahendry.auto-rename-tag",
+                "aaron-bond.better-comments",
+                "Codeium.codeium"
+            ]
+        }
+    },
+    "workspaceFolder": "/var/www/",
+    "shutdownAction": "none"
+}
