@@ -121,31 +121,48 @@
         No images in this album yet.
       </div>
 
-      <div v-else class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        <div v-for="image in album.images" :key="image.id" class="relative group">
-          <img :src="image.thumbnail_url" class="w-full aspect-square object-cover rounded-lg" />
+      <div v-else>
+        <p class="text-sm text-neutral-400 mb-4">Drag images to reorder</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
           <div
-            v-if="album.cover_image_id === image.id"
-            class="absolute top-2 left-2 bg-white text-neutral-950 text-xs px-2 py-1 rounded font-medium"
+            v-for="(image, index) in album.images"
+            :key="image.id"
+            :data-index="index"
+            :draggable="true"
+            @dragstart="onDragStart($event, index)"
+            @dragover.prevent="onDragOver($event, index)"
+            @drop="onDrop($event, index)"
+            @dragend="onDragEnd"
+            class="relative group cursor-grab active:cursor-grabbing transition-transform"
+            :class="{ 'opacity-50 scale-95': draggedIndex === index, 'ring-2 ring-white': dragOverIndex === index && draggedIndex !== index }"
           >
-            Cover
-          </div>
-          <div
-            class="absolute inset-0 bg-neutral-950/80 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2"
-          >
-            <button
-              v-if="album.cover_image_id !== image.id"
-              @click="setCover(image.id)"
-              class="bg-white text-neutral-950 px-3 py-1 rounded text-sm hover:bg-neutral-200 transition-colors"
+            <img :src="image.thumbnail_url" class="w-full aspect-square object-cover rounded-lg" />
+            <div
+              v-if="album.cover_image_id === image.id"
+              class="absolute top-2 left-2 bg-white text-neutral-950 text-xs px-2 py-1 rounded font-medium"
             >
-              Set Cover
-            </button>
-            <button
-              @click="deleteImage(image.id)"
-              class="bg-neutral-800 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors"
+              Cover
+            </div>
+            <div class="absolute top-2 right-2 bg-neutral-900/80 text-white text-xs px-2 py-1 rounded">
+              {{ index + 1 }}
+            </div>
+            <div
+              class="absolute inset-0 bg-neutral-950/80 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2"
             >
-              Delete
-            </button>
+              <button
+                v-if="album.cover_image_id !== image.id"
+                @click.stop="setCover(image.id)"
+                class="bg-white text-neutral-950 px-3 py-1 rounded text-sm hover:bg-neutral-200 transition-colors"
+              >
+                Set Cover
+              </button>
+              <button
+                @click.stop="deleteImage(image.id)"
+                class="bg-neutral-800 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -173,7 +190,17 @@ export default {
       selectedFiles: [],
       uploading: false,
       savingAlbum: false,
+      draggedIndex: null,
+      dragOverIndex: null,
+      originalOrder: null,
     };
+  },
+  computed: {
+    hasReordered() {
+      if (!this.originalOrder) return false;
+      const currentOrder = this.album.images.map((img) => img.id);
+      return JSON.stringify(currentOrder) !== JSON.stringify(this.originalOrder);
+    },
   },
   methods: {
     saveAlbum() {
@@ -228,6 +255,46 @@ export default {
           }
         );
       }
+    },
+    onDragStart(event, index) {
+      this.draggedIndex = index;
+      if (!this.originalOrder) {
+        this.originalOrder = [...this.album.images.map((img) => img.id)];
+      }
+      event.dataTransfer.effectAllowed = "move";
+    },
+    onDragOver(event, index) {
+      event.preventDefault();
+      this.dragOverIndex = index;
+    },
+    onDrop(event, index) {
+      event.preventDefault();
+      if (this.draggedIndex === null || this.draggedIndex === index) return;
+
+      const images = [...this.album.images];
+      const [removed] = images.splice(this.draggedIndex, 1);
+      images.splice(index, 0, removed);
+      this.album.images = images;
+      this.draggedIndex = null;
+      this.dragOverIndex = null;
+      this.saveOrder();
+    },
+    onDragEnd() {
+      this.draggedIndex = null;
+      this.dragOverIndex = null;
+    },
+    saveOrder() {
+      const order = this.album.images.map((img) => img.id);
+      this.$inertia.put(
+        `/admin/albums/${this.album.id}/images/reorder`,
+        { order },
+        {
+          preserveScroll: true,
+          onSuccess: () => {
+            this.originalOrder = [...order];
+          },
+        }
+      );
     },
   },
 };

@@ -49,4 +49,20 @@ class ImageController extends Controller
         $album->update(['cover_image_id' => $image->id]);
         return back()->with('success', 'Cover image updated.');
     }
+
+    public function reorder(Request $request, Album $album)
+    {
+        $request->validate([
+            'order' => ['required', 'array'],
+            'order.*' => ['required', 'integer'],
+        ]);
+
+        foreach ($request->order as $position => $imageId) {
+            Image::where('id', $imageId)
+                ->where('album_id', $album->id)
+                ->update(['position' => $position]);
+        }
+
+        return back()->with('success', 'Images reordered.');
+    }
 }

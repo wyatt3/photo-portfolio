@@ -13,19 +13,8 @@
       </div>
     </header>
 
-    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-wrap gap-2 mb-8">
-        <Link
-          v-for="tag in album.tags"
-          :key="tag.slug"
-          :href="`/?tag=${tag.slug}`"
-          class="text-xs text-neutral-500 hover:text-white px-3 py-1.5 rounded-full bg-neutral-900 hover:bg-neutral-800 transition-colors"
-        >
-          {{ tag.name }}
-        </Link>
-      </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1">
+    <main class="top-spacing">
+      <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4">
         <button
           v-for="(image, index) in album.images"
           :key="image.id"
@@ -144,6 +133,10 @@ export default {
 </script>
 
 <style scoped>
+.top-spacing {
+  padding-top: 61px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;

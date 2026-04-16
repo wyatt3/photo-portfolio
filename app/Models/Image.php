@@ -17,6 +17,7 @@ class Image extends Model
         'thumbnail_path',
         'width',
         'height',
+        'position',
     ];
 
     protected $casts = [

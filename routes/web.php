@@ -29,6 +29,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/albums/{album}', [AdminAlbumController::class, 'destroy'])->name('admin.albums.destroy');
         Route::post('/albums/{album}/images', [AdminImageController::class, 'store'])->name('admin.albums.images.store');
         Route::post('/albums/{album}/images/{image}/cover', [AdminImageController::class, 'setCover'])->name('admin.albums.images.cover');
+        Route::put('/albums/{album}/images/reorder', [AdminImageController::class, 'reorder'])->name('admin.albums.images.reorder');
         Route::delete('/images/{image}', [AdminImageController::class, 'destroy'])->name('admin.images.destroy');
         Route::get('/tags', [AdminTagController::class, 'index'])->name('admin.tags.index');
         Route::post('/tags', [AdminTagController::class, 'store'])->name('admin.tags.store');
