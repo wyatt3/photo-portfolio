@@ -6,16 +6,18 @@ use App\Http\Controllers\Admin\ImageController as AdminImageController;
 use App\Http\Controllers\Admin\TagController as AdminTagController;
 use App\Http\Controllers\Frontend\AlbumController as FrontendAlbumController;
 use App\Http\Controllers\Frontend\HomeController;
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
+
+Authenticate::redirectUsing(fn ($request) => $request->expectsJson() ? null : route('admin.login'));
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/albums/{slug}', [FrontendAlbumController::class, 'show'])->name('album.show');
 
+Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
+Route::post('/login', [AdminAuthController::class, 'login']);
+
 Route::prefix('admin')->group(function () {
-    Route::middleware('guest')->group(function () {
-        Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
-        Route::post('/login', [AdminAuthController::class, 'login']);
-    });
 
     Route::middleware('auth')->group(function () {
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');

@@ -7,6 +7,7 @@ use App\Models\Image;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Format;
 use Intervention\Image\Drivers\Gd\Driver;
 
 class ImageService
@@ -28,17 +29,17 @@ class ImageService
         $watermarkPath = 'images/watermark/' . $filename;
         $thumbnailPath = 'images/thumbnail/' . $filename;
 
-        $image = $this->imageManager->read($file->getPathname());
+        $image = $this->imageManager->decodePath($file->getPathname());
         $width = $image->width();
         $height = $image->height();
 
-        Storage::disk('public')->put($originalPath, $file->getContents());
+        Storage::disk('public')->put($originalPath, $file->get());
 
         $watermarked = $this->applyTiledWatermark($image);
-        Storage::disk('public')->put($watermarkPath, $watermarked->toJpeg(85)->toFilePointer());
+        Storage::disk('public')->put($watermarkPath, $watermarked->encodeUsingFormat(Format::JPEG, 85)->toString());
 
         $thumbnail = $this->generateThumbnail($image);
-        Storage::disk('public')->put($thumbnailPath, $thumbnail->toJpeg(80)->toFilePointer());
+        Storage::disk('public')->put($thumbnailPath, $thumbnail->encodeUsingFormat(Format::JPEG, 80)->toString());
 
         return $album->images()->create([
             'original_path' => $originalPath,
@@ -86,8 +87,7 @@ class ImageService
                     $offsetY,
                     fn($font) => $font->size($fontSize)
                         ->color('ffffff', $opacity)
-                        ->align('left')
-                        ->valign('top')
+                        ->align('left', 'top')
                         ->angle($angle)
                 );
             }

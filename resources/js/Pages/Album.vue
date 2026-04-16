@@ -56,7 +56,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          
+
           <button
             v-if="currentIndex > 0"
             @click="prevImage"
@@ -66,13 +66,13 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          
+
           <img
             :src="album.images[currentIndex].full_url"
             :alt="`${album.title} photo ${currentIndex + 1}`"
             class="max-w-[90vw] max-h-[90vh] object-contain"
           />
-          
+
           <button
             v-if="currentIndex < album.images.length - 1"
             @click="nextImage"
@@ -93,8 +93,8 @@
 </template>
 
 <script>
-import { Link } from '@inertiajs/vue3';
-import { Teleport } from 'vue';
+import { Link } from "@inertiajs/vue3";
+import { Teleport } from "vue";
 
 export default {
   components: { Link, Teleport },
@@ -111,11 +111,11 @@ export default {
     openLightbox(index) {
       this.currentIndex = index;
       this.lightboxOpen = true;
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     },
     closeLightbox() {
       this.lightboxOpen = false;
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     },
     prevImage() {
       if (this.currentIndex > 0) {
@@ -129,16 +129,16 @@ export default {
     },
     handleKeydown(e) {
       if (!this.lightboxOpen) return;
-      if (e.key === 'Escape') this.closeLightbox();
-      if (e.key === 'ArrowLeft') this.prevImage();
-      if (e.key === 'ArrowRight') this.nextImage();
+      if (e.key === "Escape") this.closeLightbox();
+      if (e.key === "ArrowLeft") this.prevImage();
+      if (e.key === "ArrowRight") this.nextImage();
     },
   },
   mounted() {
-    window.addEventListener('keydown', this.handleKeydown);
+    window.addEventListener("keydown", this.handleKeydown);
   },
   beforeUnmount() {
-    window.removeEventListener('keydown', this.handleKeydown);
+    window.removeEventListener("keydown", this.handleKeydown);
   },
 };
 </script>

@@ -9,8 +9,9 @@ createInertiaApp({
         return pages[`./Pages/${name}.vue`]();
     },
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .mount(el);
+        const app = createApp({ render: () => h(App, props) })
+            .use(plugin);
+
+        return app.mount(el);
     },
 });
