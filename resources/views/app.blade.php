@@ -11,6 +11,9 @@
 
 <body class="bg-neutral-950">
     @inertia
+    <footer>
+        &copy; {{ date('Y') }} {{ config('app.name') }}
+    </footer>
 </body>
 
 </html>
