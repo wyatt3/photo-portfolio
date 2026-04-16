@@ -10,7 +10,7 @@ class AlbumService
     public function create(array $data): Album
     {
         $data['slug'] = $this->generateUniqueSlug($data['title']);
-        
+
         if (!empty($data['published_at'])) {
             $data['is_published'] = true;
         }
@@ -49,13 +49,9 @@ class AlbumService
         return $album->fresh()->load('tags');
     }
 
-    public function getPublished(?string $tagSlug = null)
+    public function getPublished()
     {
         $query = Album::published()->with(['coverImage', 'tags']);
-
-        if ($tagSlug) {
-            $query->withTag($tagSlug);
-        }
 
         return $query->orderByDesc('published_at')->get();
     }

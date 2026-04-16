@@ -10,9 +10,9 @@ class HomeController extends Controller
 {
     public function __construct(private AlbumService $albumService) {}
 
-    public function index(?string $tag = null)
+    public function index()
     {
-        $albums = $this->albumService->getPublished($tag);
+        $albums = $this->albumService->getPublished();
         $tags = Tag::withCount('albums')->orderBy('name')->get();
         return inertia('Home', [
             'albums' => $albums->map(fn($album) => [
@@ -33,7 +33,6 @@ class HomeController extends Controller
                 'slug' => $tag->slug,
                 'album_count' => $tag->albums_count,
             ]),
-            'activeTag' => $tag,
         ]);
     }
 }

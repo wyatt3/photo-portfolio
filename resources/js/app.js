@@ -3,7 +3,7 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import './bootstrap';
 
 createInertiaApp({
-    title: (title) => title ? `${title} | Photography` : 'Photos by Wyatt Johnson',
+    title: () => `Photos by ${import.meta.env.VITE_APP_NAME}`,
     resolve: (name) => {
         const pages = import.meta.glob('./Pages/**/*.vue');
         return pages[`./Pages/${name}.vue`]();

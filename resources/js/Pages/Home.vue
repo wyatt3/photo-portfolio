@@ -2,10 +2,10 @@
   <div class="min-h-screen bg-neutral-950">
     <header class="fixed top-0 left-0 right-0 z-50 bg-neutral-950/80 backdrop-blur-sm border-b border-white/5">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-        <h1 class="text-lg font-medium text-white tracking-wider">PHOTOS BY WYATT JOHNSON</h1>
+        <h1 class="text-lg font-medium text-white tracking-wider uppercase">Photos by {{ appName }}</h1>
         <div class="flex gap-2">
           <button
-            @click="filterTag(null)"
+            @click="activeTag = null"
             class="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
             :class="!activeTag ? 'bg-white text-neutral-950' : 'text-neutral-400 hover:text-white'"
           >
@@ -14,7 +14,7 @@
           <button
             v-for="tag in tags"
             :key="tag.slug"
-            @click="filterTag(tag.slug)"
+            @click="activeTag = tag.slug"
             class="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
             :class="activeTag === tag.slug ? 'bg-white text-neutral-950' : 'text-neutral-400 hover:text-white'"
           >
@@ -25,14 +25,14 @@
     </header>
 
     <main class="top-spacing">
-      <div v-if="albums.length === 0" class="text-center text-neutral-600 py-24">
+      <div v-if="filteredAlbums.length === 0" class="text-center text-neutral-600 py-24">
         <p v-if="activeTag">No albums found with this tag.</p>
         <p v-else>No albums published yet.</p>
       </div>
 
       <div v-else class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4">
         <Link
-          v-for="album in albums"
+          v-for="album in filteredAlbums"
           :key="album.id"
           :href="`/albums/${album.slug}`"
           class="group relative aspect-[4/3] overflow-hidden bg-neutral-900"
@@ -107,15 +107,21 @@ export default {
   props: {
     albums: Array,
     tags: Array,
-    activeTag: String,
   },
-  methods: {
-    filterTag(slug) {
-      if (!slug) {
-        this.$inertia.get("/");
-      } else {
-        this.$inertia.get(`/?tag=${slug}`);
+  data() {
+    return {
+      appName: import.meta.env.VITE_APP_NAME,
+      activeTag: null,
+    };
+  },
+  computed: {
+    filteredAlbums() {
+      if (!this.activeTag) {
+        return this.albums;
       }
+      return this.albums.filter((album) =>
+        album.tags.some((tag) => tag.slug === this.activeTag)
+      );
     },
   },
 };
