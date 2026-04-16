@@ -18,7 +18,20 @@ class ImageController extends Controller
         $album->load(['images', 'tags']);
 
         return Inertia::render('Admin/Albums/Images', [
-            'album' => $album,
+            'album' => [
+                'id' => $album->id,
+                'title' => $album->title,
+                'slug' => $album->slug,
+                'description' => $album->description,
+                'cover_image_id' => $album->cover_image_id,
+                'images' => $album->images->map(fn($image) => [
+                    'id' => $image->id,
+                    'thumbnail_url' => $image->getUrl('thumbnail'),
+                    'watermark_url' => $image->getUrl('watermark'),
+                    'width' => $image->width,
+                    'height' => $image->height,
+                ]),
+            ],
         ]);
     }
 

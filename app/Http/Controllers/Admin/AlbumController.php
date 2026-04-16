@@ -21,7 +21,15 @@ class AlbumController extends Controller
             ->get();
 
         return Inertia::render('Admin/Albums/Index', [
-            'albums' => $albums,
+            'albums' => $albums->map(fn($album) => [
+                'id' => $album->id,
+                'title' => $album->title,
+                'slug' => $album->slug,
+                'is_published' => $album->is_published,
+                'images_count' => $album->images_count,
+                'cover_image_url' => $album->coverImage?->getUrl('thumbnail'),
+                'tags' => $album->tags->map(fn($tag) => $tag->name),
+            ]),
         ]);
     }
 
@@ -57,7 +65,20 @@ class AlbumController extends Controller
         $album->load(['tags', 'images']);
 
         return Inertia::render('Admin/Albums/Edit', [
-            'album' => $album,
+            'album' => [
+                'id' => $album->id,
+                'title' => $album->title,
+                'slug' => $album->slug,
+                'description' => $album->description,
+                'is_published' => $album->is_published,
+                'cover_image_id' => $album->cover_image_id,
+                'cover_image_url' => $album->coverImage?->getUrl('thumbnail'),
+                'images' => $album->images->map(fn($image) => [
+                    'id' => $image->id,
+                    'thumbnail_url' => $image->getUrl('thumbnail'),
+                ]),
+                'tags' => $album->tags->map(fn($tag) => $tag->id),
+            ],
             'tags' => Tag::orderBy('name')->get(),
         ]);
     }
