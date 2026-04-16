@@ -24,7 +24,10 @@
           <h2 class="text-2xl font-bold text-white">Tags</h2>
         </div>
 
-        <div v-if="$page.props.flash?.success" class="bg-green-900/50 text-green-400 border border-green-800 p-3 rounded mb-6">
+        <div
+          v-if="$page.props.flash?.success"
+          class="bg-green-900/50 text-green-400 border border-green-800 p-3 rounded mb-6"
+        >
           {{ $page.props.flash.success }}
         </div>
 
@@ -42,12 +45,15 @@
               class="bg-white text-neutral-950 px-6 py-2 rounded-md hover:bg-neutral-200 transition-colors disabled:opacity-50 font-medium"
               :disabled="!newTagName || creating"
             >
-              {{ creating ? 'Creating...' : 'Create' }}
+              {{ creating ? "Creating..." : "Create" }}
             </button>
           </form>
         </div>
 
-        <div v-if="tags.length === 0" class="text-center text-neutral-500 py-12 bg-neutral-900 rounded-lg border border-neutral-800">
+        <div
+          v-if="tags.length === 0"
+          class="text-center text-neutral-500 py-12 bg-neutral-900 rounded-lg border border-neutral-800"
+        >
           No tags yet. Create your first tag!
         </div>
 
@@ -57,8 +63,12 @@
               <tr>
                 <th class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Name</th>
                 <th class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Slug</th>
-                <th class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Albums</th>
-                <th class="px-6 py-4 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Actions</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">
+                  Albums
+                </th>
+                <th class="px-6 py-4 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-neutral-800">
@@ -86,7 +96,7 @@
 </template>
 
 <script>
-import { Link } from '@inertiajs/vue3';
+import { Link } from "@inertiajs/vue3";
 
 export default {
   components: { Link },
@@ -95,7 +105,7 @@ export default {
   },
   data() {
     return {
-      newTagName: '',
+      newTagName: "",
       creating: false,
     };
   },
@@ -103,16 +113,21 @@ export default {
     createTag() {
       if (!this.newTagName) return;
       this.creating = true;
-      this.$inertia.post('/admin/tags', { name: this.newTagName }, {
-        onFinish: () => {
-          this.creating = false;
-          this.newTagName = '';
-        },
-      });
+      this.$inertia.post(
+        "/admin/tags",
+        { name: this.newTagName },
+        {
+          preserveScroll: true,
+          onFinish: () => {
+            this.creating = false;
+            this.newTagName = "";
+          },
+        }
+      );
     },
     deleteTag(id) {
-      if (!confirm('Are you sure you want to delete this tag?')) return;
-      this.$inertia.delete(`/admin/tags/${id}`);
+      if (!confirm("Are you sure you want to delete this tag?")) return;
+      this.$inertia.delete(`/admin/tags/${id}`, {}, { preserveScroll: true });
     },
   },
 };

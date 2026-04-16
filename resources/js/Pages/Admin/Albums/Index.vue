@@ -30,15 +30,24 @@
           </Link>
         </div>
 
-        <div v-if="$page.props.flash?.success" class="bg-green-900/50 text-green-400 border border-green-800 p-3 rounded mb-6">
+        <div
+          v-if="$page.props.flash?.success"
+          class="bg-green-900/50 text-green-400 border border-green-800 p-3 rounded mb-6"
+        >
           {{ $page.props.flash.success }}
         </div>
 
-        <div v-if="$page.props.errors?.message" class="bg-red-900/50 text-red-400 border border-red-800 p-3 rounded mb-6">
+        <div
+          v-if="$page.props.errors?.message"
+          class="bg-red-900/50 text-red-400 border border-red-800 p-3 rounded mb-6"
+        >
           {{ $page.props.errors.message }}
         </div>
 
-        <div v-if="albums.length === 0" class="text-center text-neutral-500 py-12 bg-neutral-900 rounded-lg border border-neutral-800">
+        <div
+          v-if="albums.length === 0"
+          class="text-center text-neutral-500 py-12 bg-neutral-900 rounded-lg border border-neutral-800"
+        >
           No albums yet. Create your first album!
         </div>
 
@@ -47,10 +56,16 @@
             <thead class="bg-neutral-900">
               <tr>
                 <th class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Title</th>
-                <th class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Images</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">
+                  Images
+                </th>
                 <th class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Tags</th>
-                <th class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Status</th>
-                <th class="px-6 py-4 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Actions</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">
+                  Status
+                </th>
+                <th class="px-6 py-4 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-neutral-800">
@@ -73,10 +88,14 @@
                 </td>
                 <td class="px-6 py-4">
                   <span
-                    :class="album.is_published ? 'bg-green-900/50 text-green-400 border border-green-800' : 'bg-neutral-800 text-neutral-500'"
+                    :class="
+                      album.is_published
+                        ? 'bg-green-900/50 text-green-400 border border-green-800'
+                        : 'bg-neutral-800 text-neutral-500'
+                    "
                     class="px-2 py-1 rounded text-xs"
                   >
-                    {{ album.is_published ? 'Published' : 'Draft' }}
+                    {{ album.is_published ? "Published" : "Draft" }}
                   </span>
                 </td>
                 <td class="px-6 py-4 text-right space-x-4">
@@ -103,7 +122,7 @@
 </template>
 
 <script>
-import { Link } from '@inertiajs/vue3';
+import { Link } from "@inertiajs/vue3";
 
 export default {
   components: { Link },
@@ -112,8 +131,14 @@ export default {
   },
   methods: {
     deleteAlbum(id) {
-      if (confirm('Are you sure you want to delete this album?')) {
-        this.$inertia.delete(`/admin/albums/${id}`);
+      if (confirm("Are you sure you want to delete this album?")) {
+        this.$inertia.delete(
+          `/admin/albums/${id}`,
+          {},
+          {
+            preserveScroll: true,
+          }
+        );
       }
     },
   },

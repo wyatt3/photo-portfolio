@@ -53,14 +53,13 @@
                 v-for="tag in tags"
                 :key="tag.id"
                 class="flex items-center px-3 py-2 rounded cursor-pointer transition-colors"
-                :class="form.tag_ids.includes(tag.id) ? 'bg-white text-neutral-950' : 'bg-neutral-800 text-neutral-400 hover:bg-neutral-700'"
+                :class="
+                  form.tag_ids.includes(tag.id)
+                    ? 'bg-white text-neutral-950'
+                    : 'bg-neutral-800 text-neutral-400 hover:bg-neutral-700'
+                "
               >
-                <input
-                  type="checkbox"
-                  :value="tag.id"
-                  v-model="form.tag_ids"
-                  class="mr-2"
-                />
+                <input type="checkbox" :value="tag.id" v-model="form.tag_ids" class="mr-2" />
                 {{ tag.name }}
               </label>
             </div>
@@ -72,7 +71,7 @@
               class="bg-white text-neutral-950 px-6 py-2 rounded-md hover:bg-neutral-200 transition-colors font-medium disabled:opacity-50"
               :disabled="savingAlbum"
             >
-              {{ savingAlbum ? 'Saving...' : 'Save Changes' }}
+              {{ savingAlbum ? "Saving..." : "Save Changes" }}
             </button>
           </div>
         </form>
@@ -183,6 +182,7 @@ export default {
         onFinish: () => {
           this.savingAlbum = false;
         },
+        preserveScroll: true,
       });
     },
     handleFileSelect(event) {
@@ -201,6 +201,7 @@ export default {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        preserveScroll: true,
         onFinish: () => {
           this.uploading = false;
           this.selectedFiles = [];
@@ -209,11 +210,23 @@ export default {
       });
     },
     setCover(imageId) {
-      this.$inertia.post(`/admin/albums/${this.album.id}/images/${imageId}/cover`);
+      this.$inertia.post(
+        `/admin/albums/${this.album.id}/images/${imageId}/cover`,
+        {},
+        {
+          preserveScroll: true,
+        }
+      );
     },
     deleteImage(imageId) {
       if (confirm("Are you sure you want to delete this image?")) {
-        this.$inertia.delete(`/admin/images/${imageId}`);
+        this.$inertia.delete(
+          `/admin/images/${imageId}`,
+          {},
+          {
+            preserveScroll: true,
+          }
+        );
       }
     },
   },
