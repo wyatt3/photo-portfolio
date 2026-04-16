@@ -134,7 +134,10 @@
             @drop="onDrop($event, index)"
             @dragend="onDragEnd"
             class="relative group cursor-grab active:cursor-grabbing transition-transform"
-            :class="{ 'opacity-50 scale-95': draggedIndex === index, 'ring-2 ring-white': dragOverIndex === index && draggedIndex !== index }"
+            :class="{
+              'opacity-50 scale-95': draggedIndex === index,
+              'ring-2 ring-white': dragOverIndex === index && draggedIndex !== index,
+            }"
           >
             <img :src="image.thumbnail_url" class="w-full aspect-square object-cover rounded-lg" />
             <div

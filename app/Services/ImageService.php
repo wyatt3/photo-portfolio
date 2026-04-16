@@ -35,7 +35,7 @@ class ImageService
 
         Storage::disk('public')->put($originalPath, $file->get());
 
-        $watermarked = $this->applyTiledWatermark($image);
+        $watermarked = $this->applyTiledWatermark(clone $image);
         Storage::disk('public')->put($watermarkPath, $watermarked->encodeUsingFormat(Format::JPEG, 85)->toString());
 
         $thumbnail = $this->generateThumbnail($image);
@@ -63,8 +63,8 @@ class ImageService
 
     private function applyTiledWatermark($image)
     {
-        $fontSize = max(16, (int) ($image->width() / 30));
-        $opacity = 0.25;
+        $fontSize = max(48, (int) ($image->width() / 5));
+        $opacity = 0.15;
 
         $textWidth = strlen($this->watermarkText) * $fontSize * 0.6;
         $textHeight = $fontSize * 1.5;
@@ -101,10 +101,7 @@ class ImageService
         $maxDimension = (int) config('photos.thumbnail_max_dimension', 800);
 
         if ($image->width() > $maxDimension || $image->height() > $maxDimension) {
-            $image->resize(
-                $image->width() > $image->height() ? $maxDimension : null,
-                $image->height() >= $image->width() ? $maxDimension : null
-            );
+            $image->cover($maxDimension, $maxDimension);
         }
 
         return $image;

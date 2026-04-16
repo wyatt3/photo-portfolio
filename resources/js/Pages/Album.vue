@@ -19,12 +19,12 @@
           v-for="(image, index) in album.images"
           :key="image.id"
           @click="openLightbox(index)"
-          class="aspect-square overflow-hidden bg-neutral-900 cursor-pointer hover:opacity-80 transition-opacity"
+          class="relative aspect-square overflow-hidden bg-neutral-900 cursor-pointer hover:opacity-80 transition-opacity"
         >
           <img
             :src="image.thumbnail_url"
             :alt="`${album.title} photo ${index + 1}`"
-            class="w-full h-full object-cover"
+            class="absolute inset-0 w-full h-full object-cover"
           />
         </button>
       </div>
