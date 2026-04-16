@@ -56,7 +56,7 @@ class AlbumController extends Controller
             $this->albumService->syncTags($album, $validated['tag_ids']);
         }
 
-        return redirect("/admin/albums/{$album->id}/images")
+        return redirect("/admin/albums/{$album->id}/edit")
             ->with('success', 'Album created successfully.');
     }
 
@@ -76,6 +76,7 @@ class AlbumController extends Controller
                 'images' => $album->images->map(fn($image) => [
                     'id' => $image->id,
                     'thumbnail_url' => $image->getUrl('thumbnail'),
+                    'watermark_url' => $image->getUrl('watermark'),
                 ]),
                 'tags' => $album->tags->map(fn($tag) => $tag->id),
             ],

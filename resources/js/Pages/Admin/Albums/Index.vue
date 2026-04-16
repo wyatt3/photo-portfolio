@@ -64,10 +64,10 @@
                   <div class="flex flex-wrap gap-1">
                     <span
                       v-for="tag in album.tags"
-                      :key="tag.id"
+                      :key="tag"
                       class="bg-neutral-800 text-neutral-400 px-2 py-1 rounded text-xs"
                     >
-                      {{ tag.name }}
+                      {{ tag }}
                     </span>
                   </div>
                 </td>
@@ -80,12 +80,6 @@
                   </span>
                 </td>
                 <td class="px-6 py-4 text-right space-x-4">
-                  <Link
-                    :href="`/admin/albums/${album.id}/images`"
-                    class="text-neutral-400 hover:text-white text-sm transition-colors"
-                  >
-                    Images
-                  </Link>
                   <Link
                     :href="`/admin/albums/${album.id}/edit`"
                     class="text-neutral-400 hover:text-white text-sm transition-colors"

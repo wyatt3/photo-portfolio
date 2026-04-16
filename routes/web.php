@@ -27,7 +27,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/albums/{album}/edit', [AdminAlbumController::class, 'edit'])->name('admin.albums.edit');
         Route::put('/albums/{album}', [AdminAlbumController::class, 'update'])->name('admin.albums.update');
         Route::delete('/albums/{album}', [AdminAlbumController::class, 'destroy'])->name('admin.albums.destroy');
-        Route::get('/albums/{album}/images', [AdminImageController::class, 'index'])->name('admin.albums.images');
         Route::post('/albums/{album}/images', [AdminImageController::class, 'store'])->name('admin.albums.images.store');
         Route::post('/albums/{album}/images/{image}/cover', [AdminImageController::class, 'setCover'])->name('admin.albums.images.cover');
         Route::delete('/images/{image}', [AdminImageController::class, 'destroy'])->name('admin.images.destroy');
