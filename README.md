@@ -1,58 +1,206 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+A photo gallery application built with Laravel, Inertia.js, and Vue 3.
 </p>
 
-## About Laravel
+## Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This is a photography portfolio/gallery application that allows you to:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Organize photos into albums** with titles, descriptions, and tags
+- **Manage albums** through an admin panel (create, edit, publish, delete)
+- **Upload images** with automatic watermarking and thumbnail generation
+- **Display albums** on a public frontend filtered by tags
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tech Stack
 
-## Learning Laravel
+- **Backend**: Laravel 13 (PHP 8.3+)
+- **Frontend**: Vue 3 with Inertia.js
+- **Styling**: Tailwind CSS
+- **Image Processing**: Intervention Image
+- **Database**: MySQL (default) or SQLite for local development
+- **Containerization**: Docker with Traefik reverse proxy
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Project Structure
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+app/
+├── Http/Controllers/
+│   ├── Admin/           # Admin panel controllers (AlbumController, ImageController, TagController, AuthController)
+│   └── Frontend/        # Public-facing controllers (AlbumController, HomeController)
+├── Models/              # Eloquent models (Album, Image, Tag, User)
+├── Providers/           # Service providers
+└── Services/           # Business logic (AlbumService, ImageService, TagService)
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+resources/js/
+├── Components/         # Reusable Vue components
+├── Layouts/            # Page layouts
+└── Pages/              # Inertia pages (Home, Album, Admin/*)
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+database/migrations/     # Database schema
+routes/web.php          # Route definitions
+config/photos.php       # Photo gallery settings
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Data Models
 
-## Contributing
+### Album
+- `title` - Album name
+- `slug` - URL-friendly identifier
+- `description` - Optional description
+- `is_published` - Whether the album is publicly visible
+- `published_at` - Publication timestamp
+- `cover_image_id` - Reference to the cover image
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Image
+- `album_id` - Parent album
+- `watermark_path` - Path to watermarked full-size image
+- `thumbnail_path` - Path to generated thumbnail
+- `width` / `height` - Original image dimensions
+- `position` - Sort order within album
 
-## Code of Conduct
+### Tag
+- `name` - Tag display name
+- `slug` - URL-friendly identifier
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Setup
 
-## Security Vulnerabilities
+### Using Docker (Recommended)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Create the Docker network:
+   ```bash
+   docker network create photos
+   ```
+
+2. Start the containers:
+   ```bash
+   docker compose up -d
+   ```
+
+3. Install dependencies and set up the application:
+   ```bash
+   docker compose exec php composer install
+   docker compose exec php php artisan key:generate
+   docker compose exec php php artisan migrate
+   docker compose exec js npm install
+   docker compose exec js npm run build
+   ```
+
+4. Access the application at `http://photos`
+
+### Local Development (Without Docker)
+
+1. Install dependencies:
+   ```bash
+   composer install
+   npm install
+   ```
+
+2. Copy and configure environment:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+3. Set up SQLite database (or configure MySQL in `.env`):
+   ```bash
+   touch database/database.sqlite
+   php artisan migrate
+   ```
+
+4. Build assets and start dev server:
+   ```bash
+   npm run build
+   php artisan serve
+   ```
+
+5. For live reload during development:
+   ```bash
+   composer run dev
+   ```
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `APP_NAME` | Application name (used in watermarks) | `Laravel` |
+| `PHOTOS_THUMBNAIL_MAX_DIMENSION` | Max thumbnail dimension in pixels | `800` |
+
+### Photo Settings
+
+Edit `config/photos.php` or set environment variables:
+
+```php
+'thumbnail_max_dimension' => env('PHOTOS_THUMBNAIL_MAX_DIMENSION', 800),
+```
+
+### Watermark Configuration
+
+Watermark settings are in `app/Services/ImageService.php`:
+
+- `watermark_font_size_ratio` - Font size relative to image (default: 0.02)
+- `watermark_opacity` - Text opacity 0-100 (default: 30)
+- `watermark_spacing_ratio` - Spacing between watermarks (default: 0.30)
+- `watermark_font` - Path to font file
+
+## Image Processing
+
+When images are uploaded:
+
+1. **Full-size watermarked image** is generated with tiled text overlay
+2. **Thumbnail** is created (default max 800px, configurable)
+3. Both versions are stored in `storage/app/public/images/`
+
+## Routes
+
+### Public Routes
+- `GET /` - Home page with published albums
+- `GET /albums/{slug}` - Album gallery page
+
+### Admin Routes
+- `GET /login` - Admin login
+- `POST /login` - Authenticate
+- `GET /admin/albums` - Album list
+- `GET /admin/albums/create` - Create album form
+- `POST /admin/albums` - Store new album
+- `GET /admin/albums/{id}/edit` - Edit album form
+- `PUT /admin/albums/{id}` - Update album
+- `DELETE /admin/albums/{id}` - Delete album
+- `POST /admin/albums/{id}/images` - Upload images
+- `PUT /admin/albums/{id}/images/reorder` - Reorder images
+- `DELETE /admin/images/{id}` - Delete image
+- `GET /admin/tags` - Tag management
+
+## Creating the First Admin User
+
+```bash
+php artisan tinker
+```
+
+Then run:
+```php
+\App\Models\User::create([
+    'name' => 'Admin',
+    'email' => 'admin@example.com',
+    'password' => bcrypt('your-password'),
+]);
+```
+
+## Development
+
+### Running Tests
+```bash
+composer run test
+```
+
+### Code Style
+```bash
+./vendor/bin/pint
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT
