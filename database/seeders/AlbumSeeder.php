@@ -124,7 +124,7 @@ class AlbumSeeder extends Seeder
         file_put_contents($tempFile, $response->body());
 
         $filename = uniqid() . '.jpg';
-        
+
         $originalPath = 'images/original/' . $filename;
         $watermarkPath = 'images/watermark/' . $filename;
         $thumbnailPath = 'images/thumbnail/' . $filename;
@@ -145,7 +145,6 @@ class AlbumSeeder extends Seeder
 
         return Image::create([
             'album_id' => $albumId,
-            'original_path' => $originalPath,
             'watermark_path' => $watermarkPath,
             'thumbnail_path' => $thumbnailPath,
             'width' => $width,
