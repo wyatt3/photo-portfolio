@@ -1,12 +1,16 @@
 <template>
   <div class="min-h-screen bg-neutral-950">
     <header class="fixed top-0 left-0 right-0 z-50 bg-neutral-950/80 backdrop-blur-sm border-b border-white/5">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-        <h1 class="text-lg font-medium text-white tracking-wider uppercase">Photos by {{ appName }}</h1>
-        <div class="flex gap-2">
+      <div
+        class="max-w-7xl mx-auto px-2 lg:px-6 xl:px-8 py-3 lg:py-4 flex flex-col xl:flex-row items-start gap-2 xl:items-center xl:justify-between"
+      >
+        <h1 class="text-base xl:text-lg font-medium text-white tracking-wider uppercase text-center xl:text-left">
+          Photos by {{ appName }}
+        </h1>
+        <div class="flex justify-center gap-1.5 lg:gap-2 overflow-x-auto max-lg:scrollbar-hide">
           <button
             @click="activeTag = null"
-            class="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+            class="px-2 lg:px-3 py-1 lg:py-1.5 rounded-full text-xs font-medium transition-all shrink-0 whitespace-nowrap"
             :class="!activeTag ? 'bg-white text-neutral-950' : 'text-neutral-400 hover:text-white'"
           >
             All
@@ -15,7 +19,7 @@
             v-for="tag in tags"
             :key="tag.slug"
             @click="activeTag = tag.slug"
-            class="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+            class="px-2 lg:px-3 py-1 lg:py-1.5 rounded-full text-xs font-medium transition-all shrink-0 whitespace-nowrap"
             :class="activeTag === tag.slug ? 'bg-white text-neutral-950' : 'text-neutral-400 hover:text-white'"
           >
             {{ tag.name }}
@@ -30,7 +34,7 @@
         <p v-else>No albums published yet.</p>
       </div>
 
-      <div v-else class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4">
+      <div v-else class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4">
         <Link
           v-for="album in filteredAlbums"
           :key="album.id"
@@ -119,9 +123,7 @@ export default {
       if (!this.activeTag) {
         return this.albums;
       }
-      return this.albums.filter((album) =>
-        album.tags.some((tag) => tag.slug === this.activeTag)
-      );
+      return this.albums.filter((album) => album.tags.some((tag) => tag.slug === this.activeTag));
     },
   },
 };
@@ -129,6 +131,24 @@ export default {
 
 <style scoped>
 .top-spacing {
-  padding-top: 61px;
+  padding-top: 77px;
+}
+
+@media screen and (min-width: 768px) {
+  .top-spacing {
+    padding-top: 81px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .top-spacing {
+    padding-top: 93px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .top-spacing {
+    padding-top: 61px;
+  }
 }
 </style>
