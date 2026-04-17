@@ -16,7 +16,7 @@ class ImageController extends Controller
     {
         $request->validate([
             'images' => ['required', 'array', 'min:1'],
-            'images.*' => ['image', 'mimes:jpeg,png,jpg', 'max:10240'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg'],
         ]);
 
         $images = [];

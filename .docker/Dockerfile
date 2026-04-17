@@ -15,7 +15,7 @@ ENV ENV="/etc/profile"
 RUN addgroup --gid $GID $USER \
     && adduser --gid $GID --disabled-password --uid $UID $USER
 COPY .docker/.bashrc /home/user/.bashrc
-RUN echo "export PS1='roundabout \w \$ '" >> /home/user/.bashrc
+RUN echo "export PS1='photos \w \$ '" >> /home/user/.bashrc
 
 RUN rm -f /var/run/apache2/apache2.pid
 
