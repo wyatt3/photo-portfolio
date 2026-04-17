@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('thumbnail_path');
             $table->integer('width')->nullable();
             $table->integer('height')->nullable();
-            $table->unsignedInteger('position')->default(0)->after('height');
+            $table->unsignedInteger('position')->default(0);
             $table->timestamps();
         });
     }
