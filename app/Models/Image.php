@@ -12,7 +12,6 @@ class Image extends Model
 
     protected $fillable = [
         'album_id',
-        'original_path',
         'watermark_path',
         'thumbnail_path',
         'width',
@@ -33,7 +32,6 @@ class Image extends Model
     public function getUrl(string $type = 'watermark'): string
     {
         $path = match ($type) {
-            'original' => $this->original_path,
             'thumbnail' => $this->thumbnail_path,
             default => $this->watermark_path,
         };

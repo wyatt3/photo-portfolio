@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('album_id')->constrained()->cascadeOnDelete();
-            $table->string('original_path');
             $table->string('watermark_path');
             $table->string('thumbnail_path');
             $table->integer('width')->nullable();
             $table->integer('height')->nullable();
+            $table->unsignedInteger('position')->default(0)->after('height');
             $table->timestamps();
         });
     }
