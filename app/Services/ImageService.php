@@ -24,7 +24,7 @@ class ImageService
     public function upload(Album $album, UploadedFile $file): Image
     {
         $filename = uniqid() . '.jpg';
-        
+
         $originalPath = 'images/original/' . $filename;
         $watermarkPath = 'images/watermark/' . $filename;
         $thumbnailPath = 'images/thumbnail/' . $filename;
@@ -61,38 +61,9 @@ class ImageService
         $image->delete();
     }
 
+
     private function applyTiledWatermark($image)
     {
-        $fontSize = max(48, (int) ($image->width() / 5));
-        $opacity = 0.15;
-
-        $textWidth = strlen($this->watermarkText) * $fontSize * 0.6;
-        $textHeight = $fontSize * 1.5;
-
-        $angle = -30;
-        $spacingX = $textWidth * 1.5;
-        $spacingY = $textHeight * 3;
-
-        $cols = (int) ceil($image->width() / $spacingX) + 4;
-        $rows = (int) ceil($image->height() / $spacingY) + 4;
-
-        for ($row = -2; $row < $rows; $row++) {
-            for ($col = -2; $col < $cols; $col++) {
-                $offsetX = $col * $spacingX + ($row % 2 ? $spacingX / 2 : 0);
-                $offsetY = $row * $spacingY;
-
-                $image->text(
-                    $this->watermarkText,
-                    $offsetX,
-                    $offsetY,
-                    fn($font) => $font->size($fontSize)
-                        ->color('ffffff', $opacity)
-                        ->align('left', 'top')
-                        ->angle($angle)
-                );
-            }
-        }
-
         return $image;
     }
 

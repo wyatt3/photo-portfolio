@@ -32,7 +32,7 @@ class Image extends Model
 
     public function getUrl(string $type = 'watermark'): string
     {
-        $path = match($type) {
+        $path = match ($type) {
             'original' => $this->original_path,
             'thumbnail' => $this->thumbnail_path,
             default => $this->watermark_path,

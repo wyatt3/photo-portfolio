@@ -249,15 +249,9 @@ export default {
       );
     },
     deleteImage(imageId) {
-      if (confirm("Are you sure you want to delete this image?")) {
-        this.$inertia.delete(
-          `/admin/images/${imageId}`,
-          {},
-          {
-            preserveScroll: true,
-          }
-        );
-      }
+      this.$inertia.delete(`/admin/images/${imageId}`, {
+        preserveScroll: true,
+      });
     },
     onDragStart(event, index) {
       this.draggedIndex = index;
