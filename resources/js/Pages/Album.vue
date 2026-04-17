@@ -19,13 +19,18 @@
           v-for="(image, index) in album.images"
           :key="image.id"
           @click="openLightbox(index)"
-          class="relative aspect-square overflow-hidden bg-neutral-900 cursor-pointer hover:opacity-80 transition-opacity"
+          class="relative aspect-square overflow-hidden bg-neutral-900 group cursor-pointer"
         >
           <img
             :src="image.thumbnail_url"
             :alt="`${album.title} photo ${index + 1}`"
-            class="absolute inset-0 w-full h-full object-cover"
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+            <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+          </div>
         </button>
       </div>
     </main>
