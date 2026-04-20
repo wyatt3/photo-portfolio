@@ -53,7 +53,7 @@ class AlbumService
     {
         $query = Album::published()->with(['coverImage', 'tags']);
 
-        return $query->orderByDesc('published_at')->get();
+        return $query->orderByDesc('created_at')->get();
     }
 
     private function generateUniqueSlug(string $title, ?int $excludeId = null): string
