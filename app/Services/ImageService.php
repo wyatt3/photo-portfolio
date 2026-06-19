@@ -98,7 +98,7 @@ class ImageService
 
     private function generateThumbnail($image): mixed
     {
-        $maxDimension = (int) config('photos.thumbnail_max_dimension', 800);
+        $maxDimension = (int) config('photos.thumbnail_max_dimension', 1200);
 
         if ($image->width() > $maxDimension || $image->height() > $maxDimension) {
             $image->cover($maxDimension, $maxDimension);
